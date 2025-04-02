@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>500 - Server Error</title>
+    <style>
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            text-align: center;
+            padding: 2em;
+        }
+        
+        .error-code {
+            font-size: 8em;
+            font-weight: bold;
+            color: var(--button-red);
+            margin: 0;
+        }
+        
+        .error-message {
+            font-size: 2em;
+            margin: 0.5em 0 1.5em 0;
+        }
+        
+        .home-button {
+            background-color: var(--button-green);
+            color: var(--text-color);
+            padding: 0.8em 1.5em;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .home-button:hover {
+            background-color: var(--button-green-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1 class="error-code">500</h1>
+        <p class="error-message">Server Error</p>
+        <p>Something went wrong on our end. Please try again later.</p>
+        <a href="{{ url_for('index') }}" class="home-button">Go Home</a>
+    </div>
+</body>
+</html>

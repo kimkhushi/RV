@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="result-page">
+    <div class="container">
+        <h1>Detection Report</h1>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alerts">
+                    {% for category, message in messages %}
+                        <div class="alert {{ 'alert-danger' if category == 'danger' else 'alert-warning' }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Image Container: Two images side by side -->
+        <div class="image-container">
+            <div class="image-section">
+                <h2>Original Image:</h2>
+                <img src="{{ url_for('detection.view_image', image_id=image_id, image_type='original') }}" alt="Original Image" class="image">
+            </div>
+            <div class="image-section">
+                <h2>Processed Image:</h2>
+                <img src="{{ url_for('detection.view_image', image_id=image_id, image_type='processed') }}" alt="Processed Image" class="image">
+            </div>
+        </div>
+
+        <!-- Details Section -->
+        <div class="details">
+            <h3>Details</h3>
+            <ul>
+                <li><strong>File Name:</strong> {{ file_name }}</li>
+                <li><strong>Detection Result:</strong> {{ detection_result }}</li>
+                <li><strong>Confidence Score:</strong> {{ confidence_score }}</li>
+                <li><strong>Upload Time:</strong> {{ upload_time }}</li>
+                <li><strong>Remarks:</strong> 
+                    {% if remarks %}
+                        {{ remarks }}
+                    {% else %}
+                        No remarks provided.
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+
+        <!-- Remarks Form -->
+        <form action="{{ url_for('detection.save_remarks') }}" method="POST">
+            <input type="hidden" name="image_id" value="{{ image_id }}">
+            <textarea name="remarks" rows="4" cols="50" placeholder="Add remarks here...">{{ remarks if remarks else '' }}</textarea>
+            <br><br>
+            <button type="submit" class="save-remarks-button">Save Remarks</button>
+        </form>
+
+        <br><br>
+        <a href="{{ url_for('detection.history') }}" class="view-history-button">View Upload History</a>
+        <a href="{{ url_for('report.single_report', image_id=image_id) }}" class="report-button">Generate Report</a>
+        <a href="{{ url_for('index') }}" class="upload-more-button">Upload Another Image</a>
+    </div>
+</body>
+</html>

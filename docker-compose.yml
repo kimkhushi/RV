@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  chest-xray-app:
+    build: .
+    container_name: chest-xray-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./static/uploads:/app/static/uploads
+      - ./database.db:/app/database.db
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-default_secret_key_change_this_in_production}
+    restart: unless-stopped

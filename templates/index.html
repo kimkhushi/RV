@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Upload Chest X-Ray</title>
+</head>
+<body class="upload-page">
+    <!-- Header with Logo Dropdown -->
+    <div class="header">
+        <h1><pre>       Red Vision </pre></h1>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/2-removebg-preview.png') }}" alt="Logo" class="logo clickable-logo">
+            <div class="logo-dropdown">
+                <a href="{{ url_for('auth.change_password') }}">Change Password</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="upload-container">
+        <!-- Form -->
+        <form action="{{ url_for('detection.upload_file') }}" method="POST" enctype="multipart/form-data">
+            <div class="upload-instruction">
+                <p>Select a chest X-ray image to upload for detection</p>
+            </div>
+            <input id="file-input" type="file" name="file" accept="image/*" required>
+            <button type="submit" class="upload-button">Upload</button>
+        </form>
+
+        <!-- Navigation Links -->
+        <div class="navigation">
+            <a href="{{ url_for('detection.history') }}" class="view-history-button">View History</a>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alerts">
+                {% for category, message in messages %}
+                    <div class="alert {{ 'alert-danger' if category == 'danger' else 'alert-warning' }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+</body>
+</html>

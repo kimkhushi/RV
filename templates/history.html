@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Detection History</title>
+</head>
+<body class="history-page">
+    <div class="header">
+        <h1><pre>       Red Vision </pre></h1>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/2-removebg-preview.png') }}" alt="Logo" class="logo clickable-logo">
+            <div class="logo-dropdown">
+                <a href="{{ url_for('auth.change_password') }}">Change Password</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alerts">
+                {% for category, message in messages %}
+                    <div class="alert {{ 'alert-danger' if category == 'danger' else 'alert-warning' if category == 'warning' else 'alert-success' }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        {% if images %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>File Name</th>
+                    <th>Detection Result</th>
+                    <th>Confidence</th>
+                    <th>Upload Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for image in images %}
+                <tr>
+                    <td>{{ image.id }}</td>
+                    <td>{{ image.file_name }}</td>
+                    <td>{{ image.detection_result }}</td>
+                    <td>{{ "%.2f"|format(image.confidence_score) if image.confidence_score else "N/A" }}</td>
+                    <td>{{ image.upload_time }}</td>
+                    <td>
+                        <a href="{{ url_for('detection.image_details', image_id=image.id) }}" class="details">View</a>
+                        <a href="{{ url_for('report.single_report', image_id=image.id) }}" class="report-button">Report</a>
+                        <form action="{{ url_for('detection.delete_image', image_id=image.id) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="report-button" onclick="return confirm('Are you sure you want to delete this image?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination controls -->
+        <div class="pagination">
+            {% if page > 1 %}
+            <a href="{{ url_for('detection.history', page=page-1) }}" class="pagination-link">&laquo; Previous</a>
+            {% endif %}
+            
+            <span class="current-page">Page {{ page }} of {{ total_pages }}</span>
+            
+            {% if page < total_pages %}
+            <a href="{{ url_for('detection.history', page=page+1) }}" class="pagination-link">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="no-data">
+            <p>No detection history found.</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <div class="navigation">
+        <a href="{{ url_for('index') }}" class="upload-more-button">Upload New Image</a>
+        {% if images %}
+        <a href="{{ url_for('report.generate_report') }}" class="generate-report-button">Generate Full Report</a>
+        {% endif %}
+    </div>
+    
+</body>
+</html>
